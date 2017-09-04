@@ -347,7 +347,7 @@ class MainActivity : AppCompatActivity() {
         quoteSpan.setSpan(CustomTypefaceSpan(italicTypeface), 0,
                 quote.length, SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        val color = ForegroundColorSpan(getColor(R.color.colorAccent))
+        val color = ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent))
         quoteSpan.setSpan(color,
                 quote.indexOf(selfish),
                 quote.indexOf(selfish) + selfish.length,
