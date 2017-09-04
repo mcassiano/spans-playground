@@ -370,12 +370,12 @@ class MainActivity : AppCompatActivity() {
                 quote.indexOf(sureAsHell) + sureAsHell.length,
                 SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        quoteSpan.setSpan(BackgroundColorSpan(getColor(R.color.colorAccent)),
+        quoteSpan.setSpan(BackgroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
                 quote.indexOf(sureAsHell),
                 quote.indexOf(sureAsHell) + sureAsHell.length,
                 SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        quoteSpan.setSpan(ForegroundColorSpan(getColor(R.color.white)),
+        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.white)),
                 quote.indexOf(sureAsHell),
                 quote.indexOf(sureAsHell) + sureAsHell.length,
                 SPAN_EXCLUSIVE_EXCLUSIVE)
