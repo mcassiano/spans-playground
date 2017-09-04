@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.*
 import android.support.v4.content.res.ResourcesCompat
+import android.text.method.LinkMovementMethod
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         textView = findViewById(R.id.text)
+        textView.movementMethod = LinkMovementMethod.getInstance()
         letterSpacingSpan()
     }
 
@@ -320,7 +322,6 @@ class MainActivity : AppCompatActivity() {
 //        textView.text = finalText
 //    }
 
-
     private fun letterSpacingSpan() {
 
         val italicTypeface = ResourcesCompat
@@ -387,13 +388,26 @@ class MainActivity : AppCompatActivity() {
                 author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
         authorSpan.setSpan(LetterSpacingSpan(0.15f), 0, author.length,
                 SPAN_EXCLUSIVE_EXCLUSIVE)
+        //...
+        authorSpan.setSpan(CustomClickSpan(),
+                0, author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
 
+        val imageHolder = SpannableString(" ")
+        val image = ContextCompat.getDrawable(this, R.drawable.monroe)
+        image.setBounds(0, 0, 100, 100)
+        val imageSpan = ImageSpan(image, ImageSpan.ALIGN_BOTTOM)
+
+        imageHolder.setSpan(imageSpan, 0, 1, SPAN_EXCLUSIVE_EXCLUSIVE)
 
         val finalText = SpannableStringBuilder()
         finalText
                 .appendln(quoteSpan)
                 .appendln()
                 .append(authorSpan)
+                .append(" ")
+                .append(imageHolder)
+                .appendln()
+                .appendln()
 
         textView.text = finalText
 
