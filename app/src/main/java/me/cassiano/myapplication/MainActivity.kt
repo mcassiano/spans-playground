@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.*
 import android.support.v4.content.res.ResourcesCompat
+import android.text.Html
 import android.text.method.LinkMovementMethod
 
 
@@ -21,8 +22,109 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         textView = findViewById(R.id.text)
+//        replaceHtmlSpan()
+
         textView.movementMethod = LinkMovementMethod.getInstance()
         letterSpacingSpan()
+    }
+
+    private fun replaceHtmlSpan() {
+        val html = Html.fromHtml("<blockquote>Perfection is achieved, not when there " +
+                "is nothing more to add, but when there is nothing " +
+                "left to take away.</blockquote><p>-Antoine de Saint-Exupéry</p>")
+
+        textView.text = html.replaceQuoteSpansWithCustomSpan()
+    }
+
+    private fun letterSpacingSpan() {
+
+        val italicTypeface = ResourcesCompat
+                .getFont(this, R.font.alegreya_italic)!!
+
+        val boldTypeface = ResourcesCompat
+                .getFont(this, R.font.alegreya_bold)!!
+
+        val quote = "I'm selfish, impatient and a little insecure. " +
+                "I make mistakes, I am out of control and at times hard to handle. " +
+                "But if you can't handle me at my worst, " +
+                "then you sure as hell don't deserve me at my best."
+
+        val selfish = "selfish"
+        val impatient = "impatient"
+        val insecure = "insecure"
+        val sureAsHell = "sure as hell"
+
+        val author = "Marilyn Monroe"
+
+        val quoteSpan = SpannableString(quote)
+        quoteSpan.setSpan(CustomQuoteSpan2(this), 0,
+                quote.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+        quoteSpan.setSpan(CustomTypefaceSpan(italicTypeface), 0,
+                quote.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val color = ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent))
+        quoteSpan.setSpan(color,
+                quote.indexOf(selfish),
+                quote.indexOf(selfish) + selfish.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // do the same for the other words
+
+        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
+                quote.indexOf(impatient),
+                quote.indexOf(impatient) + impatient.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
+                quote.indexOf(insecure),
+                quote.indexOf(insecure) + insecure.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        quoteSpan.setSpan(RelativeSizeSpan(1.5f),
+                quote.indexOf(sureAsHell),
+                quote.indexOf(sureAsHell) + sureAsHell.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        quoteSpan.setSpan(BackgroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
+                quote.indexOf(sureAsHell),
+                quote.indexOf(sureAsHell) + sureAsHell.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.white)),
+                quote.indexOf(sureAsHell),
+                quote.indexOf(sureAsHell) + sureAsHell.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val authorSpan = SpannableString(author)
+        authorSpan.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE),
+                0, author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+        authorSpan.setSpan(CustomTypefaceSpan(boldTypeface), 0,
+                author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+        authorSpan.setSpan(LetterSpacingSpan(0.15f), 0, author.length,
+                SPAN_EXCLUSIVE_EXCLUSIVE)
+        //...
+        authorSpan.setSpan(CustomClickSpan(),
+                0, author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val imageHolder = SpannableString(" ")
+        val image = ContextCompat.getDrawable(this, R.drawable.monroe)
+        image.setBounds(0, 0, 100, 100)
+        val imageSpan = ImageSpan(image, ImageSpan.ALIGN_BOTTOM)
+
+        imageHolder.setSpan(imageSpan, 0, 1, SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val finalText = SpannableStringBuilder()
+        finalText
+                .appendln(quoteSpan)
+                .appendln()
+                .append(authorSpan)
+                .append(" ")
+                .append(imageHolder)
+                .appendln()
+                .appendln()
+
+        textView.text = finalText
+
     }
 
 //    private fun bulletSpan() {
@@ -321,96 +423,5 @@ class MainActivity : AppCompatActivity() {
 //
 //        textView.text = finalText
 //    }
-
-    private fun letterSpacingSpan() {
-
-        val italicTypeface = ResourcesCompat
-                .getFont(this, R.font.alegreya_italic)!!
-
-        val boldTypeface = ResourcesCompat
-                .getFont(this, R.font.alegreya_bold)!!
-
-        val quote = "I'm selfish, impatient and a little insecure. " +
-                "I make mistakes, I am out of control and at times hard to handle. " +
-                "But if you can't handle me at my worst, " +
-                "then you sure as hell don't deserve me at my best."
-
-        val selfish = "selfish"
-        val impatient = "impatient"
-        val insecure = "insecure"
-        val sureAsHell = "sure as hell"
-
-        val author = "Marilyn Monroe"
-
-        val quoteSpan = SpannableString(quote)
-        quoteSpan.setSpan(CustomQuoteSpan2(this), 0,
-                quote.length, SPAN_EXCLUSIVE_EXCLUSIVE)
-        quoteSpan.setSpan(CustomTypefaceSpan(italicTypeface), 0,
-                quote.length, SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val color = ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent))
-        quoteSpan.setSpan(color,
-                quote.indexOf(selfish),
-                quote.indexOf(selfish) + selfish.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        // do the same for the other words
-
-        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
-                quote.indexOf(impatient),
-                quote.indexOf(impatient) + impatient.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
-                quote.indexOf(insecure),
-                quote.indexOf(insecure) + insecure.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        quoteSpan.setSpan(RelativeSizeSpan(1.5f),
-                quote.indexOf(sureAsHell),
-                quote.indexOf(sureAsHell) + sureAsHell.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        quoteSpan.setSpan(BackgroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
-                quote.indexOf(sureAsHell),
-                quote.indexOf(sureAsHell) + sureAsHell.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        quoteSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.white)),
-                quote.indexOf(sureAsHell),
-                quote.indexOf(sureAsHell) + sureAsHell.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val authorSpan = SpannableString(author)
-        authorSpan.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE),
-                0, author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
-        authorSpan.setSpan(CustomTypefaceSpan(boldTypeface), 0,
-                author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
-        authorSpan.setSpan(LetterSpacingSpan(0.15f), 0, author.length,
-                SPAN_EXCLUSIVE_EXCLUSIVE)
-        //...
-        authorSpan.setSpan(CustomClickSpan(),
-                0, author.length, SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val imageHolder = SpannableString(" ")
-        val image = ContextCompat.getDrawable(this, R.drawable.monroe)
-        image.setBounds(0, 0, 100, 100)
-        val imageSpan = ImageSpan(image, ImageSpan.ALIGN_BOTTOM)
-
-        imageHolder.setSpan(imageSpan, 0, 1, SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val finalText = SpannableStringBuilder()
-        finalText
-                .appendln(quoteSpan)
-                .appendln()
-                .append(authorSpan)
-                .append(" ")
-                .append(imageHolder)
-                .appendln()
-                .appendln()
-
-        textView.text = finalText
-
-    }
 
 }
